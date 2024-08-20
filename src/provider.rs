@@ -106,6 +106,10 @@ mod tests {
             Update,
             exclusive_continuous_service_with_param,
         );
+
+        let exclusive_callback_closure = |_world: &mut World| {
+        };
+        let exclusive_callback_closure = exclusive_callback_closure.into_blocking_callback();
     }
 
     fn blocking_exclusive_system(
