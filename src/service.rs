@@ -634,6 +634,18 @@ mod tests {
         assert!(app.world.resource::<TestSystemRan>().0);
     }
 
+    #[derive(Debug, Hash, PartialEq, Eq, Clone, SystemSet)]
+    enum TestSystemSet {
+        TestStage,
+    }
+
+    #[test]
+    fn test_spawn_continuous_service_in_set() {
+        let mut app = App::new();
+        app.configure_sets(Update, TestSystemSet::TestStage);
+        app.spawn_continuous_service(Update, sys_continuous_service.in_set(TestSystemSet::TestStage));
+    }
+
     #[test]
     fn test_add_async_service() {
         let mut app = App::new();
@@ -715,6 +727,10 @@ mod tests {
         app.update();
         assert!(app.world.resource::<TestSystemRan>().0);
     }
+
+    fn sys_continuous_service(
+        In(ContinuousService {..}): ContinuousServiceInput<(), ()>,
+    ) {}
 
     fn sys_async_service(
         In(AsyncService{ request, .. }): AsyncServiceInput<String>,
